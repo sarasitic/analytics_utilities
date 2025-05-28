@@ -1,4 +1,4 @@
-def analyze_slice_distribution(df, slice_column, conversion_timestamp_col='conversion_timestamp', time_bounds=[None], assignment_timestamp_col='first_assigned_at'):
+def analyze_slice_distribution(df, slice_column, conversion_timestamp_col='conversion_timestamp', time_bounds=[None], assignment_timestamp_col='first_assigned_at', variant_col='variant'):
     """
     Analyze the distribution of conversions within a slice based on timestamp, split by variant,
     for multiple time bounds.
@@ -14,6 +14,8 @@ def analyze_slice_distribution(df, slice_column, conversion_timestamp_col='conve
         List of days to bound the conversion window, None for unbounded
     assignment_timestamp_col : str
         Column containing the assignment timestamp (default 'first_assigned_at')
+    variant_col : str
+        Column containing the variant assignment (default 'variant')
     """
     results = {}
 
@@ -58,7 +60,7 @@ def analyze_slice_distribution(df, slice_column, conversion_timestamp_col='conve
         print(f"Overall: {total_conversions}/{total_records} ({overall_rate:.2f}%)")
 
         # By variant
-        variant_stats = eligible_df.groupby('variant').agg({
+        variant_stats = eligible_df.groupby(variant_col).agg({
             conversion_timestamp_col: [
                 ('Total', 'size'),
                 ('Conversions', lambda x: get_conversions(pd.DataFrame({
@@ -78,7 +80,7 @@ def analyze_slice_distribution(df, slice_column, conversion_timestamp_col='conve
         print("-"*80)
 
         # By slice value and variant
-        slice_variant_stats = eligible_df.groupby([slice_column, 'variant']).agg({
+        slice_variant_stats = eligible_df.groupby([slice_column, variant_col]).agg({
             conversion_timestamp_col: [
                 ('Total', 'size'),
                 ('Conversions', lambda x: get_conversions(pd.DataFrame({
