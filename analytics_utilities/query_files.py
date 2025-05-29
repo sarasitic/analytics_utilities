@@ -1,3 +1,7 @@
+import pandas as pd
+import glob
+import os
+
 def prepare_metric_data(df):
     """Process metric data for analysis."""
     df = df.copy()

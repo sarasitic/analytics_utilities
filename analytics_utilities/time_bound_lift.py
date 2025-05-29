@@ -1,3 +1,5 @@
+import pandas as pd
+
 def run_time_bound_analysis(
     df, 
     slice_column=None, 

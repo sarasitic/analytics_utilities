@@ -1,3 +1,5 @@
+import pandas as pd
+
 def analyze_slice_distribution(df, slice_column, conversion_timestamp_col='conversion_timestamp', time_bounds=[None], assignment_timestamp_col='first_assigned_at'):
     """
     Analyze the distribution of conversions within a slice based on timestamp, split by variant,
