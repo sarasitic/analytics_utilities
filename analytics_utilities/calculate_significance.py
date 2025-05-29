@@ -1,4 +1,4 @@
-def calculate_significance(
+def calculateSignificance(
     df, 
     variant_col='variant', 
     conversion_col='conversion', 
