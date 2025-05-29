@@ -1,8 +1,12 @@
+
 import pandas as pd
 import glob
 import os
 
-def prepare_metric_data(df):
+
+
+def prepare_metric_data(df, id_col='_id'):
+
     """Process metric data for analysis."""
     df = df.copy()
     timestamp_cols = df.select_dtypes(include=['object']).columns
@@ -14,7 +18,7 @@ def prepare_metric_data(df):
                 pass
     return df
 
-def load_and_prepare_data(query_dir, refresh_bq_func, verbose=True):
+def load_and_prepare_data(query_dir, refresh_bq_func, verbose=True, id_col='_id'):
     """
     Loads all SQL queries from a directory, runs them using the provided function,
     and processes the resulting DataFrames.
@@ -23,6 +27,7 @@ def load_and_prepare_data(query_dir, refresh_bq_func, verbose=True):
         query_dir (str): Path to directory containing .sql files.
         refresh_bq_func (callable): Function to execute SQL and return a DataFrame.
         verbose (bool): Whether to print progress and summary info.
+        id_col (str): Name of the unique identifier column (default '_id').
     
     Returns:
         dict: Mapping of query names to processed DataFrames.
@@ -47,14 +52,14 @@ def load_and_prepare_data(query_dir, refresh_bq_func, verbose=True):
         print("\nDataframe shapes:")
         for name, df in dataframes.items():
             print(f"{name}: {df.shape}")
-        print("\nUnique shops per dataframe:")
+        print("\nUnique IDs per dataframe:")
         for name, df in dataframes.items():
-            if 'shop_id' in df.columns:
-                print(f"{name}: {df['shop_id'].nunique()}")
+            if id_col in df.columns:
+                print(f"{name}: {df[id_col].nunique()}")
     
     if verbose:
         print("\nProcessing data...")
     for name, df in dataframes.items():
-        dataframes[name] = prepare_metric_data(df)
+        dataframes[name] = prepare_metric_data(df, id_col=id_col)
     
     return dataframes

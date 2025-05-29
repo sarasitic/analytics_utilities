@@ -7,7 +7,9 @@ def run_time_bound_analysis(
     slice_values=None, 
     conversion_timestamp_col='conversion_timestamp',
     assignment_timestamp_col='first_assigned_at',
-    conversion_col='conversion'
+    conversion_col='conversion',
+    variant_col='variant',
+    id_col='_id'
 ):
     """
     Run analysis across different time bounds and slices of data, handling nulls and edge cases.
@@ -15,11 +17,12 @@ def run_time_bound_analysis(
     assignment_timestamp_col: column name for assignment timestamp (default 'first_assigned_at')
     conversion_col: binary conversion column (default 'conversion')
     conversion_timestamp_col: timestamp column for conversion (default 'conversion_timestamp')
+    id_col: unique identifier column (default '_id')
     """
     results = {}
 
     # Defensive: check required columns
-    required_cols = {'shop_id', assignment_timestamp_col, 'variant', conversion_timestamp_col, 'total'}
+    required_cols = {id_col, assignment_timestamp_col, variant_col, conversion_timestamp_col, 'total'}
     missing = required_cols - set(df.columns)
     if missing:
         print(f"Missing required columns: {missing}")
@@ -36,7 +39,8 @@ def run_time_bound_analysis(
                     df, slice_column=col, time_bounds=time_bounds, 
                     slice_values=None, conversion_timestamp_col=conversion_timestamp_col,
                     assignment_timestamp_col=assignment_timestamp_col,
-                    conversion_col=conversion_col
+                    conversion_col=conversion_col,
+                    id_col=id_col
                 )
             else:
                 print(f"Column '{col}' not found in DataFrame. Skipping.")
@@ -65,7 +69,7 @@ def run_time_bound_analysis(
             print(f"\nResults for {bound_name}:")
             result = calculate_significance(
                 eligible_df,
-                variant_col='variant',
+                variant_col=variant_col,
                 conversion_col=conversion_col,
                 conversion_timestamp_col=conversion_timestamp_col if conversion_col not in eligible_df.columns else None
             )
@@ -124,7 +128,7 @@ def run_time_bound_analysis(
                 # Call calculate_significance
                 result = calculate_significance(
                     eligible_slice_df,
-                    variant_col='variant',
+                    variant_col=variant_col,
                     conversion_col=conversion_col,
                     conversion_timestamp_col=conversion_timestamp_col if conversion_col not in eligible_slice_df.columns else None
                 )
