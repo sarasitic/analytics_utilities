@@ -1,3 +1,7 @@
+import pandas as pd
+import numpy as np
+from statsmodels.stats.proportion import proportion_confint, proportions_ztest
+
 def calculateSignificance(
     df, 
     variant_col='variant', 

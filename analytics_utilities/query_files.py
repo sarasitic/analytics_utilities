@@ -1,4 +1,12 @@
+
+import pandas as pd
+import glob
+import os
+
+
+
 def prepare_metric_data(df, id_col='_id'):
+
     """Process metric data for analysis."""
     df = df.copy()
     timestamp_cols = df.select_dtypes(include=['object']).columns
