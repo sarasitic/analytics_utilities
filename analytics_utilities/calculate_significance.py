@@ -1,12 +1,8 @@
-<<<<<<< Updated upstream
-def calculate_significance(
-=======
 import pandas as pd
 import numpy as np
 from statsmodels.stats.proportion import proportion_confint, proportions_ztest
 
 def calculateSignificance(
->>>>>>> Stashed changes
     df, 
     variant_col='variant', 
     conversion_col='conversion', 
